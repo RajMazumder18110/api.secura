@@ -1,6 +1,7 @@
 /** @notice library imports */
 import {
   bigint,
+  boolean,
   integer,
   pgTable,
   serial,
@@ -29,6 +30,7 @@ export const lockers = pgTable(
       .references(() => erc20s.address),
     owner: varchar("owner", { length: 42 }).notNull(),
     amount: bigint("amount", { mode: "bigint" }).notNull(),
+    isUnlocked: boolean("isUnlocked").notNull().default(false),
     lockedOn: integer("lockedOn").notNull(),
     unlockOn: integer("unlockOn").notNull(),
 
@@ -51,5 +53,5 @@ export const lockers = pgTable(
 
 /// Types
 export type Locker = typeof lockers.$inferSelect;
-export type NewLockerParams = Omit<Locker, OmittedParams>;
+export type NewLockerParams = Omit<Locker, OmittedParams | "isUnlocked">;
 export type UpdateLockerUnlockParams = Pick<Locker, "lockId" | "unlockOn">;
