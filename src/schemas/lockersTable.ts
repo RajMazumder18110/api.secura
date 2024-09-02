@@ -55,3 +55,4 @@ export const lockers = pgTable(
 export type Locker = typeof lockers.$inferSelect;
 export type NewLockerParams = Omit<Locker, OmittedParams | "isUnlocked">;
 export type UpdateLockerUnlockParams = Pick<Locker, "lockId" | "unlockOn">;
+export type UnlockLockerParams = UpdateLockerUnlockParams;
