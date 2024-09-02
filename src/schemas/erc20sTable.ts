@@ -10,7 +10,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 /// External imports
-import { commonTimestamps } from "@/schemas/common";
+import { commonTimestamps, OmittedParams } from "@/schemas/common";
 
 /// ERC20s
 export const erc20s = pgTable(
@@ -38,3 +38,7 @@ export const erc20s = pgTable(
     };
   }
 );
+
+/// Types
+export type ERC20 = typeof erc20s.$inferSelect;
+export type NewERC20Params = Omit<ERC20, OmittedParams>;

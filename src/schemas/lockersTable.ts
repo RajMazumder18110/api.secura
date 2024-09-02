@@ -10,10 +10,11 @@ import {
 } from "drizzle-orm/pg-core";
 /// External imports
 import {
+  OmittedParams,
   commonTimestamps,
   commonBlockchainFieldsForEvents,
 } from "@/schemas/common";
-import { erc20s } from "@/schemas/erc20s";
+import { erc20s } from "@/schemas/erc20sTable";
 
 /// Lockers
 export const lockers = pgTable(
@@ -47,3 +48,8 @@ export const lockers = pgTable(
     };
   }
 );
+
+/// Types
+export type Locker = typeof lockers.$inferSelect;
+export type NewLockerParams = Omit<Locker, OmittedParams>;
+export type UpdateLockerUnlockParams = Pick<Locker, "lockId" | "unlockOn">;

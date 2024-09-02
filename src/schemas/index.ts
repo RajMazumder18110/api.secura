@@ -1,3 +1,4 @@
 /** @notice Exports all tables */
-export * from "./erc20s";
+export * from "./eventsTable";
+export * from "./erc20sTable";
 export * from "./lockersTable";

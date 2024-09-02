@@ -32,3 +32,6 @@ export const commonBlockchainFieldsForEvents = {
   }).notNull(),
   topics: json("topics").$type<string[]>().notNull(),
 };
+
+/// Types
+export type OmittedParams = "id" | "createdAt" | "updatedAt";
