@@ -30,7 +30,7 @@ export const commonBlockchainFieldsForEvents = {
       SecuraEvents.SecureLockUnlocked,
     ],
   }).notNull(),
-  topics: json("topics").$type<string[]>().notNull(),
+  topics: json("topics").$type<readonly string[]>().notNull(),
 };
 
 /// Types

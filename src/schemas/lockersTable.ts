@@ -2,7 +2,6 @@
 import {
   bigint,
   boolean,
-  integer,
   pgTable,
   serial,
   text,
@@ -23,16 +22,16 @@ export const lockers = pgTable(
   {
     /// Core fields
     id: serial("id").notNull().primaryKey(),
-    lockId: bigint("lockId", { mode: "bigint" }).notNull(),
+    lockId: bigint("lockId", { mode: "bigint" }).notNull().unique(),
     name: text("name").notNull(),
-    erc20: varchar("owner", { length: 42 })
+    erc20: varchar("erc20", { length: 42 })
       .notNull()
       .references(() => erc20s.address),
     owner: varchar("owner", { length: 42 }).notNull(),
     amount: bigint("amount", { mode: "bigint" }).notNull(),
     isUnlocked: boolean("isUnlocked").notNull().default(false),
-    lockedOn: integer("lockedOn").notNull(),
-    unlockOn: integer("unlockOn").notNull(),
+    lockedOn: bigint("lockedOn", { mode: "bigint" }).notNull(),
+    unlockOn: bigint("unlockOn", { mode: "bigint" }).notNull(),
 
     /// Blockchain fields
     ...commonBlockchainFieldsForEvents,
