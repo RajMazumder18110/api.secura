@@ -1,6 +1,5 @@
 /** @notice library imports */
 import {
-  bigint,
   index,
   integer,
   pgTable,
@@ -22,7 +21,7 @@ export const erc20s = pgTable(
     symbol: text("symbol").notNull(),
     decimals: integer("decimals").notNull().default(18),
     address: varchar("address", { length: 42 }).notNull().unique(),
-    totalSupply: bigint("totalSupply", { mode: "bigint" }).notNull(),
+    totalSupply: text("totalSupply").notNull(),
 
     /// Timestamps
     ...commonTimestamps,

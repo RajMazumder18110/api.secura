@@ -3,9 +3,24 @@ import "module-alias/register";
 /// External imports
 import { PORT } from "@/constants";
 import { application } from "@/core";
+import { CreatedEventListener } from "./listeners/CreatedEventListener";
 
-/// Runner
-application.listen(PORT, () => {
+const main = async () => {
   console.clear();
-  console.log(`[${process.pid}] 🐳 api.secura :${PORT}`);
+  /// Sync un synced events
+  await CreatedEventListener.syncFailedEventsToSync();
+
+  /// Listeners
+  await CreatedEventListener.listen();
+  console.log(`🔈 Listening...`);
+
+  /// Runner
+  application.listen(PORT, () => {
+    console.log(`[${process.pid}] 🐳 api.secura :${PORT}`);
+  });
+};
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
 });

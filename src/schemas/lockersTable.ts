@@ -2,6 +2,7 @@
 import {
   bigint,
   boolean,
+  index,
   pgTable,
   serial,
   text,
@@ -22,13 +23,13 @@ export const lockers = pgTable(
   {
     /// Core fields
     id: serial("id").notNull().primaryKey(),
-    lockId: bigint("lockId", { mode: "bigint" }).notNull().unique(),
+    lockId: text("lockId").notNull().unique(),
     name: text("name").notNull(),
     erc20: varchar("erc20", { length: 42 })
       .notNull()
       .references(() => erc20s.address),
     owner: varchar("owner", { length: 42 }).notNull(),
-    amount: bigint("amount", { mode: "bigint" }).notNull(),
+    amount: text("amount").notNull(),
     isUnlocked: boolean("isUnlocked").notNull().default(false),
     lockedOn: bigint("lockedOn", { mode: "bigint" }).notNull(),
     unlockOn: bigint("unlockOn", { mode: "bigint" }).notNull(),
@@ -43,7 +44,7 @@ export const lockers = pgTable(
     /// Indexers
     return {
       /// Non unique index
-      lockeOwnerIdx: uniqueIndex("lockeOwnerIdx").on(table.owner),
+      lockeOwnerIdx: index("lockeOwnerIdx").on(table.owner),
       /// Unique index
       lockerIdIdx: uniqueIndex("lockerIdIdx").on(table.lockId),
     };

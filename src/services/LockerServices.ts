@@ -17,11 +17,14 @@ export class LockerServices {
    * @param {NewLockerParams} params The Locker details.
    */
   public static async createNewLocker(params: NewLockerParams) {
-    await database.insert(lockers).values({
-      ...params,
-      erc20: params.erc20.toLowerCase(),
-      owner: params.owner.toLowerCase(),
-    });
+    await database
+      .insert(lockers)
+      .values({
+        ...params,
+        erc20: params.erc20.toLowerCase(),
+        owner: params.owner.toLowerCase(),
+      })
+      .onConflictDoNothing();
   }
 
   /**
@@ -63,7 +66,7 @@ export class LockerServices {
   public static async findLockerById({
     id,
   }: {
-    id: bigint;
+    id: string;
   }): Promise<Locker | undefined> {
     return database.query.lockers.findFirst({
       where: eq(lockers.lockId, id),

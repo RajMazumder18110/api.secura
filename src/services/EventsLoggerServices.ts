@@ -2,6 +2,7 @@
 import { desc, eq } from "drizzle-orm";
 /// External imports
 import { database } from "@/clients";
+import { NewSyncRecordParams, sync } from "@/schemas/syncTable";
 import { events, NewEventRecordParams } from "@/schemas/eventsTable";
 import { CONTRACT_MINED_ON_BLOCK, SecuraEvents } from "@/listeners/constants";
 
@@ -9,10 +10,20 @@ import { CONTRACT_MINED_ON_BLOCK, SecuraEvents } from "@/listeners/constants";
 export class EventsLoggerServices {
   /**
    * @description Creates a new event log based on parameters.
-   * @param params The event log details.
+   *  - Insert log into log table
+   * @param {NewEventRecordParams} params The event log details.
    */
   public static async createNewEventLog(params: NewEventRecordParams) {
-    await database.insert(events).values(params);
+    await database.insert(events).values(params).onConflictDoNothing();
+  }
+
+  /**
+   * @description Creates a new sync entry on parameters.
+   *  - Insert data into sync table
+   * @param {NewSyncRecordParams} params The synced block details details.
+   */
+  public static async completeSyncUptoBlock(params: NewSyncRecordParams) {
+    await database.insert(sync).values(params);
   }
 
   /**
@@ -68,14 +79,14 @@ export class EventsLoggerServices {
     eventName: SecuraEvents;
   }) {
     /// Query database
-    const data = await database.query.events.findFirst({
+    const data = await database.query.sync.findFirst({
       columns: {
-        blockNumber: true,
+        syncedBlockNumber: true,
       },
-      orderBy: desc(events.blockNumber),
-      where: eq(events.event, eventName),
+      orderBy: desc(sync.syncedBlockNumber),
+      where: eq(sync.event, eventName),
     });
     /// Return blockNumber
-    return data ? data.blockNumber : CONTRACT_MINED_ON_BLOCK;
+    return data ? data.syncedBlockNumber : CONTRACT_MINED_ON_BLOCK;
   }
 }
